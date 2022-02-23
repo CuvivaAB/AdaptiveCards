@@ -121,7 +121,7 @@ export class Input extends React.Component {
 		const { isMultiline } = this;
 
 		// remove placeholderTextColor from styles object before using
-		const { placeholderTextColor, activeColor, inactiveColor, singleLineHeight, multiLineHeight, ...stylesObject } = this.styleConfig.input;
+		const { placeholderTextColor, placeholderCursorColor, activeColor, inactiveColor, singleLineHeight, multiLineHeight, ...stylesObject } = this.styleConfig.input;
 		let inputComputedStyles = [stylesObject, styles.input];
 		inputComputedStyles.push({ borderColor: this.state.isFocused ? activeColor : inactiveColor })
 		isMultiline ?
