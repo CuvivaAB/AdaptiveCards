@@ -10,7 +10,6 @@ import {
 	Text,
 	View,
 	TouchableOpacity,
-	Image,
 	Platform
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
@@ -20,6 +19,7 @@ import { InputContextConsumer } from '../../../utils/context';
 import * as Utils from '../../../utils/util';
 import * as Constants from '../../../utils/constants';
 import InputLabel from "../input-label";
+import { BaseImage } from '../../elements/base-image';
 
 const DropDownImage = './assets/dropdown.png';
 const CompactStyle = "compact";
@@ -43,8 +43,6 @@ export class ChoiceSetInput extends React.Component {
 		this.label = Constants.EmptyString;
 		this.isRequired = this.payload.isRequired || false;
 		this.placeholder = this.payload.placeholder;
-		this.pickerRef = React.createRef();
-
 
 		this.state = {
 			selectedPickerValue: (this.payload.choices.find(choice => choice.value === this.payload.value)) && this.payload.value,
@@ -183,34 +181,39 @@ export class ChoiceSetInput extends React.Component {
 	 */
 	renderPickerComponent(addInputItem) {
 		return (
-			<View style={styles.containerView}>
-				{<TouchableOpacity
-					activeOpacity={1}
-					onPress={onPress}
-					accessible={true}
-					accessibilityRole={'button'}
-					accessibilityLabel={this.getPickerSelectedValue(this.state.selectedPickerValue, addInputItem)}
-					accessibilityState={{ expanded: this.state.isPickerSelected }}
-				>
-					<View style={this.styleConfig.dropdown}>
-						<Text
-							style={[this.getPickerComponentStyles(addInputItem), this.styleConfig.defaultFontConfig]}
-						>
-							{this.getPickerSelectedValue(this.state.selectedPickerValue,
-								addInputItem)
-							}
-						</Text>
-						<Image
-							style={styles.button}
-							source={require(DropDownImage)}
-						/>
-					</View>
-				</TouchableOpacity>}
-				{((Platform.OS === Constants.PlatformIOS) ? this.state.isPickerSelected : true) &&
-					this.getPickerComponent(addInputItem)
-				}
-			</View>
-		)
+            <View style={styles.containerView}>
+                {
+                    <TouchableOpacity
+                        activeOpacity={1}
+                        onPress={onPress}
+                        accessible={true}
+                        accessibilityRole={'button'}
+                        accessibilityState={{
+                            expanded: this.state.isPickerSelected,
+                        }}>
+                        <View style={this.styleConfig.dropdown}>
+                            <Text
+                                style={[
+                                    this.getPickerComponentStyles(addInputItem),
+                                    this.styleConfig.defaultFontConfig,
+                                ]}>
+                                {this.getPickerSelectedValue(
+                                    this.state.selectedPickerValue,
+                                    addInputItem,
+                                )}
+                            </Text>
+                            <BaseImage
+                                style={styles.button}
+                                source={require(DropDownImage)}
+                            />
+                        </View>
+                    </TouchableOpacity>
+                }
+                {(Platform.OS === Constants.PlatformIOS
+                    ? this.state.isPickerSelected
+                    : true) && this.getPickerComponent(addInputItem)}
+            </View>
+        );
 	}
 
 	getPickerComponent(addInputItem) {
