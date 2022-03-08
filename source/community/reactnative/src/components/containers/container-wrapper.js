@@ -114,10 +114,7 @@
      /**
       * @description The method will return true, if any of the parent containers is column.
       */
-     applyBleedMarginHorizontal(computedStyles) {
-         const padding = this.props.configManager.hostConfig.getEffectiveSpacing(
-             Enums.Spacing.Padding,
-         );
+     applyBleedMarginHorizontal(computedStyles, padding) {
          if (this.payload.type === Constants.TypeColumn) {
              //If parent that means columnset have style other than default, then we need to apply padding as -padding otherwise padding as 0
              const marginValue =
@@ -146,6 +143,9 @@
          // Bleed
          // If bleed is true and style is not undefined and Default, then we will remove marginHorizontal only if any of the parent containers having the style applied other than default and direct parent is adaptive card Otherwise, we will remove padding from the marginHorizontal.
          // If bleed is true and style is not undefined and Other than Default, then we will remove marginHorizontal only if the direct parent is adaptive card Otherwise, we will remove padding from the marginHorizontal.
+        const padding = this.props.configManager.hostConfig.getEffectiveSpacing(
+            Enums.Spacing.Padding,
+        );
          if (
              this.payload.bleed &&
              this.payload.parent &&
@@ -155,14 +155,21 @@
          } else if (this.payload.bleed && this.payload.style) {
              if (this.payload.style === Enums.ContainerStyle.Default) {
                 this.hasAncestorBackgroundImage(this.payload) ? computedStyles.push({marginHorizontal: 0}) : this.hasAncestorStyle(this.payload) &&
-                     this.applyBleedMarginHorizontal(computedStyles);
+                     this.applyBleedMarginHorizontal(computedStyles, padding);
              } else {
                  this.payload.parent &&
                  this.payload.parent.type === Constants.TypeAdaptiveCard
                      ? computedStyles.push({marginHorizontal: 0})
-                     : this.applyBleedMarginHorizontal(computedStyles);
+                     : this.applyBleedMarginHorizontal(computedStyles, padding);
              }
-         }
+         } 
+
+        //Discard the horizontal padding if the component has an background image and bleed is true
+        this.payload.bleed && this.payload.type != Constants.TypeAdaptiveCard && !Utils.isNullOrEmpty(this.payload.backgroundImage) &&
+        computedStyles.push({
+            marginLeft: -padding,
+            marginRight: -padding
+        })
      }
  
      /**
@@ -190,19 +197,28 @@
              });
          if (this.payload.style) {
              if (this.payload.style === Enums.ContainerStyle.Default) {
-                     this.hasAncestorBackgroundImage(this.payload) ?
-                     computedStyles.push({
-                         padding: padding,
-                         margin: padding
-                     }) : this.hasAncestorStyle(this.payload) && computedStyles.push({
-                        padding: padding,
-                    })
+                (this.hasAncestorBackgroundImage(this.payload) || this.hasAncestorStyle(this.payload)) && computedStyles.push({
+                    padding: padding,
+                })
              } else {
-                 computedStyles.push({
-                     padding: padding,
-                 });
+                computedStyles.push({
+                    padding: padding,
+                });
              }
          }
+
+        //Add padding if the component has an background image
+        this.payload.type != Constants.TypeAdaptiveCard && !Utils.isNullOrEmpty(this.payload.backgroundImage) &&
+        computedStyles.push({
+            padding: padding
+        })
+
+        //The condition to handle the child container which has the parent also as an container.
+        this.payload.parent && this.payload.parent.type === Constants.TypeContainer && !Utils.isNullOrEmpty(this.payload.parent.backgroundImage) &&
+        computedStyles.push({
+            marginLeft: -padding,
+            marginRight: -padding
+        })
      }
  
      /**
@@ -254,7 +270,7 @@
          if (!Utils.isNullOrEmpty(styleDefinition.backgroundColor)) {
              backgroundStyle = {
                  backgroundColor:
-                     this.payload['style'] !== undefined
+                     this.payload['style'] !== undefined || !Utils.isNullOrEmpty(this.payload.backgroundImage)
                          ? Utils.hexToRGB(styleDefinition.backgroundColor)
                          : 'transparent',
              };
