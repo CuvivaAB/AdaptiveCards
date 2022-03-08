@@ -101,7 +101,7 @@
       * @description The method will return true, if any of the ancestor containers have backgroundImage.
       */
      hasAncestorBackgroundImage(payload) {
-         if (payload.parent) {
+         if (payload.parent && payload.parent.type !== Constants.TypeAdaptiveCard) {
              if (!Utils.isNullOrEmpty(payload.parent.backgroundImage)) {
                  return true;
              }
