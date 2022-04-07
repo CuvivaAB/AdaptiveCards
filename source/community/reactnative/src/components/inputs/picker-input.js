@@ -101,8 +101,8 @@ export class PickerInput extends React.Component {
 								pointerEvents='none'>
 								<TextInput
 									style={this.getComputedStyles(showErrors)}
-									autoCapitalize={Constants.NoneString}
-									autoCorrect={false}
+									autoCapitalize={Constants.SentencesString}
+									autoCorrect={true}
 									placeholder={placeholder}
 									placeholderTextColor={this.placeholderTextColor}
 									textContentType={Constants.NoneString}
