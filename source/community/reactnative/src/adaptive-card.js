@@ -72,6 +72,7 @@ export default class AdaptiveCard extends React.Component {
 		}
         
         this.scrollView = React.createRef();
+		this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
 
 	}
 
@@ -103,6 +104,13 @@ export default class AdaptiveCard extends React.Component {
 			this.setState({
 				cardModel: this.cardModel,
 			});
+		}
+	}
+
+	_keyboardDidShow = () => {
+		if(this.scrollView && this.scrollView.current)
+		{
+			this.scrollView.current.scrollToEnd({ animated: false });
 		}
 	}
 
@@ -235,6 +243,10 @@ export default class AdaptiveCard extends React.Component {
                     showsVerticalScrollIndicator={true}
                     alwaysBounceVertical={false}
                     alwaysBounceHorizontal={false}
+					onContentSizeChange={() => {
+						this.scrollView.current.scrollToEnd({ animated: false });
+          			}}
+					keyboardShouldPersistTaps="handled"
                     scrollEnabled={this.props.cardScrollEnabled}>
                     {this.parsePayload()}
                     {!Utils.isNullOrEmpty(this.state.cardModel.actions) && (
