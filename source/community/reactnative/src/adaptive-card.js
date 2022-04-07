@@ -6,10 +6,11 @@ import React from 'react';
 import {
 	Text,
 	ScrollView,
-	Keyboard
+	Keyboard,
+	KeyboardAvoidingView,
+	Platform,
 } from 'react-native';
 
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Registry } from './components/registration/registry';
 import { InputContextProvider } from './utils/context';
 import { HostConfig, defaultHostConfig } from './utils/host-config';
@@ -23,6 +24,7 @@ import { SelectAction } from './components/actions';
 import ResourceInformation from './utils/resource-information';
 import { ContainerWrapper } from './components/containers';
 import { ModelFactory } from './models';
+import { PlatformIOS, BehaviourHeight, BehaviourPadding } from "./utils/constants"
 
 export default class AdaptiveCard extends React.Component {
 
@@ -263,11 +265,10 @@ export default class AdaptiveCard extends React.Component {
 
         if (!this.props.isActionShowCard) {
 			adaptiveCardContent = (
-                <KeyboardAwareScrollView
-                    enableOnAndroid={true}
-                    extraHeight={120}>
-                    {adaptiveCardContent}
-                </KeyboardAwareScrollView>
+				<KeyboardAvoidingView keyboardVerticalOffset={100}
+				behavior={Platform.OS == PlatformIOS ? BehaviourPadding : BehaviourHeight}>
+				{adaptiveCardContent}
+				</KeyboardAvoidingView>
             );
 		}
 
