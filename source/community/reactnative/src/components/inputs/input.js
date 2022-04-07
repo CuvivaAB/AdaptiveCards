@@ -84,8 +84,8 @@ export class Input extends React.Component {
 								<InputLabel configManager={this.props.configManager} isRequired={this.isRequired} label={label} />
 								<TextInput
 									style={this.getComputedStyles(showErrors)}
-									autoCapitalize={Constants.NoneString}
-									autoCorrect={false}
+									autoCapitalize={Constants.SentencesString}
+									autoCorrect={true}
 									accessible={true}
 									accessibilityLabel={this.payload.altText}
 									placeholder={placeholder}

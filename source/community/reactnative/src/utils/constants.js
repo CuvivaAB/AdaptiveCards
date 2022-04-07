@@ -20,6 +20,7 @@ export const ReturnDone = 'done';
 export const ReturnDefault = 'default'
 
 export const NoneString = "none";
+export const SentencesString = "sentences";
 export const DoneString = 'Done';
 export const TransparentString = "transparent";
 export const WhileEditingString = "while-editing";
