@@ -52,8 +52,8 @@ export class NumberInput extends React.Component {
 	 */
 	parse() {
 		this.id = this.payload.id;
-		this.min = this.payload.min ? this.payload.min : Number.MIN_VALUE;
-		this.max = this.payload.max ? this.payload.max : Number.MAX_VALUE;
+		this.min = this.payload.min;
+		this.max = this.payload.max;
 	}
 
 	/**
@@ -105,7 +105,7 @@ export class NumberInput extends React.Component {
 
 		if (NUM_REGEX.test(numberValue)) {
 			var parsedValue = parseFloat(numberValue);
-			if (parsedValue < this.min || parsedValue > this.max) {
+			if ((this.min && parsedValue < this.min) || (this.max && parsedValue > this.max)) {
 				return true
 			} else {
 				return false
