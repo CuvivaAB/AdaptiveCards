@@ -6,11 +6,9 @@ import React from 'react';
 import {
 	Text,
 	ScrollView,
-	Keyboard,
-	KeyboardAvoidingView,
-	Platform,
 } from 'react-native';
 
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Registry } from './components/registration/registry';
 import { InputContextProvider } from './utils/context';
 import { HostConfig, defaultHostConfig } from './utils/host-config';
@@ -24,7 +22,6 @@ import { SelectAction } from './components/actions';
 import ResourceInformation from './utils/resource-information';
 import { ContainerWrapper } from './components/containers';
 import { ModelFactory } from './models';
-import { PlatformIOS, BehaviourHeight, BehaviourPadding } from "./utils/constants"
 
 export default class AdaptiveCard extends React.Component {
 
@@ -75,7 +72,6 @@ export default class AdaptiveCard extends React.Component {
 		}
         
         this.scrollView = React.createRef();
-		this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
 
 	}
 
@@ -107,13 +103,6 @@ export default class AdaptiveCard extends React.Component {
 			this.setState({
 				cardModel: this.cardModel,
 			});
-		}
-	}
-
-	_keyboardDidShow = () => {
-		if(this.scrollView && this.scrollView.current)
-		{
-			this.scrollView.current.scrollToEnd({ animated: false });
 		}
 	}
 
@@ -246,9 +235,6 @@ export default class AdaptiveCard extends React.Component {
                     showsVerticalScrollIndicator={true}
                     alwaysBounceVertical={false}
                     alwaysBounceHorizontal={false}
-					onContentSizeChange={() => {
-						this.scrollView.current.scrollToEnd({ animated: false });
-          			}}
 					keyboardShouldPersistTaps="handled"
                     scrollEnabled={this.props.cardScrollEnabled}>
                     {this.parsePayload()}
@@ -265,10 +251,11 @@ export default class AdaptiveCard extends React.Component {
 
         if (!this.props.isActionShowCard) {
 			adaptiveCardContent = (
-				<KeyboardAvoidingView keyboardVerticalOffset={100}
-				behavior={Platform.OS == PlatformIOS ? BehaviourPadding : BehaviourHeight}>
-				{adaptiveCardContent}
-				</KeyboardAvoidingView>
+				<KeyboardAwareScrollView
+                    enableOnAndroid={true}
+                    extraHeight={120}>
+                    {adaptiveCardContent}
+                </KeyboardAwareScrollView>
             );
 		}
 
