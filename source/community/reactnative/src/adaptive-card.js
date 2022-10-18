@@ -8,6 +8,7 @@ import {
 	ScrollView,
 } from 'react-native';
 
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Registry } from './components/registration/registry';
 import { InputContextProvider } from './utils/context';
 import { HostConfig, defaultHostConfig } from './utils/host-config';
