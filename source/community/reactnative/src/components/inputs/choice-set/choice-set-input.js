@@ -226,6 +226,7 @@ export class ChoiceSetInput extends React.Component {
 							isError: false
 						})
 						addInputItem(this.id, { value: itemValue, errorState: false });
+						onPress()
 					}}>
 				{this.choices.map((item, key) => (
 					<Picker.Item
